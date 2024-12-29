@@ -1,0 +1,37 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "logs:DeleteLogGroup",
+                "s3:GetObjectAttributes",
+                "s3:ListBucket",
+                "s3:GetObjectVersionAttributes",
+                "s3:GetBucketPolicy",
+                "logs:CreateLogGroup",
+                "logs:DeleteLogStream",
+                "logs:PutLogEvents",
+                "s3:PutObject",
+                "s3:GetObject",
+                "logs:CreateLogStream",
+                "sns:Publish",
+                "s3:GetObjectVersion"
+            ],
+            "Resource": [
+                "arn:aws:sns:<FILL IN - REGION>:<FILL IN - ACCOUNT_ID>:TF2_Update_Notifier_Topic",
+                "arn:aws:s3:::<S3 BUCKET NAME>",
+                "arn:aws:s3:::<S3 BUCKET NAME>/*",
+                "arn:aws:logs:<FILL IN - REGION>:<FILL IN - ACCOUNT_ID>:log-group:/aws/lambda/TF2_Update_Notifier",
+                "arn:aws:logs:<FILL IN - REGION>:<FILL IN - ACCOUNT_ID>:log-group:/aws/lambda/TF2_Update_Notifier:log-stream:*"
+            ]
+        },
+        {
+            "Sid": "VisualEditor1",
+            "Effect": "Allow",
+            "Action": "s3:ListAllMyBuckets",
+            "Resource": "*"
+        }
+    ]
+}
