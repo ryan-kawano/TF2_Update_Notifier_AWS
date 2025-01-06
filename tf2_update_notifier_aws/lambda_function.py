@@ -1,5 +1,5 @@
 """
-Main function that AWS Lambda will run.
+Main function that AWS Lambda will run. See the README.md file for more information.
 """
 import os
 import boto3
@@ -10,8 +10,7 @@ from utility import send_email, verify_environment_variables, generate_return_me
 
 
 def lambda_handler(event, context):
-    """
-    The main function that will be run by AWS Lambda
+    """The main function that will be run by AWS Lambda
     :return: A status message indicating success or failure.
     :rtype dict
     """

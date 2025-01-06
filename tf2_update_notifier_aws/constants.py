@@ -3,7 +3,7 @@ Holds various constants. Some of them are retrieved from environment variables i
 """
 import os
 
-# S3
+# AWS Resources
 S3_BUCKET_NAME = os.environ["S3_BUCKET_NAME"]
 S3_BUILD_ID_FILE = os.environ["S3_BUILD_ID_FILE"]
 SNS_TOPIC_ARN = os.environ["SNS_TOPIC_ARN"]
@@ -12,4 +12,4 @@ SNS_TOPIC_ARN = os.environ["SNS_TOPIC_ARN"]
 SUCCESS_RETURN_CODE = 200
 FAILURE_RETURN_CODE = 300
 
-PATCH_NOTES_RSS_URL = os.environ["PATCH_NOTES_RSS_URL"]
+PATCH_NOTES_RSS_URL = os.environ["PATCH_NOTES_RSS_URL"] # This should be the URL of the RSS feed from SteamDB that has the patch data

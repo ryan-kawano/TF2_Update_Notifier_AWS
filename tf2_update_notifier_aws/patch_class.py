@@ -1,5 +1,5 @@
 """
-Patch class.
+File for the Patch class.
 """
 
 class Patch:
@@ -12,8 +12,5 @@ class Patch:
     :type date: str
     """
     def __init__(self, build_id, date):
-        self.build_id = build_id
-        self.date = date
-
-    build_id : int = None
-    date : str = None
+        self.build_id: int = build_id
+        self.date: str = date
