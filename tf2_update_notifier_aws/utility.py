@@ -1,22 +1,23 @@
-"""
-Holds various utility functions that are used by the main Lambda function.
+"""Various utility functions.
 """
 from botocore.client import BaseClient
-from constants import S3_BUCKET_NAME, S3_BUILD_ID_FILE, SNS_TOPIC_ARN, PATCH_NOTES_RSS_URL
+import feedparser
+import constants
 from patch_class import Patch
 
 
-def handle_error(sns_client, error_message):
+def handle_error(sns_client: BaseClient, error_message: str) -> dict:
     print(error_message)
-    send_email(sns_client,
-               subject="URGENT - TF2 Update Notifier had an error",
-               message=error_message)
-    return generate_return_message(300, error_message)
+    send_email(
+        sns_client,
+        subject=f"URGENT - {constants.Misc.PROJECT_NAME} had an error",
+        message=error_message
+    )
+    return generate_return_message(constants.StatusCodes.FAILURE, error_message)
 
 
-def send_email(sns_client, subject, message):
-    """
-    Sends an email using the SNS client with the provided subject and message.
+def send_email(sns_client: BaseClient, subject: str, message: str):
+    """Sends an email using the SNS client with the provided subject and message.
 
     :param sns_client: The SNS client to send emails with.
     :type sns_client: BaseClient
@@ -26,54 +27,58 @@ def send_email(sns_client, subject, message):
     :type message: str
     """
     sns_client.publish(
-        TopicArn=SNS_TOPIC_ARN,
+        TopicArn=constants.SNS_TOPIC_ARN,
         Subject=subject,
         Message=message
     )
 
 
-def verify_environment_variables():
-    """
-    Verifies that the Lambda environment variables were inputted correctly. See README.md for where to set these.
+def verify_environment_variables() -> str | None:
+    """Verifies that the Lambda environment variables were inputted correctly. See README.md for where to set these.
 
     :return an error message if it's missing environment variables, otherwise returns nothing.
+    :rtype: str | None
     """
     print("Verifying that env variables were provided")
-    if not S3_BUCKET_NAME:
+    if not constants.S3_BUCKET_NAME:
         return "S3 bucket name was not provided. Please provide one in the env variable \"S3_BUCKET_NAME\""
-    if not S3_BUILD_ID_FILE:
+    if not constants.S3_BUILD_ID_FILE:
         return "S3 build ID file name was not provided. Please provide one in the env variable \"S3_BUILD_ID_FILE\""
-    if not SNS_TOPIC_ARN:
+    if not constants.SNS_TOPIC_ARN:
         return "SNS topic ARN was not provided. Please provide one in the env variable \"SNS_TOPIC_ARN\""
-    if not PATCH_NOTES_RSS_URL:
+    if not constants.Misc.PATCH_NOTES_RSS_URL:
         return "Patch notes RSS URL not provided. Please provide one in the env variable \"PATCH_NOTES_RSS_URL\""
 
     return None
 
 
-def generate_return_message(status_code : int, status_body: str):
-    """
-    Generates a status message in order to return it from the main lambda function.
+def generate_return_message(status_code : int, status_body: str) -> dict:
+    """Generates a status message.
+
+    :param status_code: Return message's status code.
+    :type status_code: int
+    :param status_body: Return message's body.
+    :type status_body: str
     :return: A status message.
     :rtype: dict
     """
     return {
-        'statusCode': status_code,
-        'body': status_body
+        "statusCode": status_code,
+        "body": status_body
     }
 
 
-def find_largest_build_id(patch_notes_data):
-    """
-    Iterates through all the build IDs to find the largest one.
+def find_largest_build_id(patch_notes_data: feedparser.FeedParserDict) -> Patch:
+    """Iterates through all the build IDs to find the largest one.
     The data from the RSS feed seems to come sorted chronologically, so we could probably stop at the 1st entry,
     but checking all the entries is safer. Plus, there usually aren't many entries, so it doesn't take long
 
     :param patch_notes_data: The result from feedparser.parse() with the RSS url.
+    :type patch_notes_data: feedparser.FeedParserDict
     :return: A patch object with the latest patch data.
     :rtype: Patch
     """
-    print(f"Finding largest build ID")
+    print("Finding largest build ID")
     latest_patch = Patch(-1, "")
     for patch in patch_notes_data.entries:
         print(f"Processing patch: {patch}")

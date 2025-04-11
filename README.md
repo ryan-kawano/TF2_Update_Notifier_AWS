@@ -1,5 +1,7 @@
 # TF2 Update Notifier AWS
-An application for AWS Lambda that will send an email when updates for TF2 are released. It utilizes data from SteamDB's RSS feed for TF2 updates. The application is set to run repeatedly on a timer. When the timer goes off, it'll retrieve the latest patch data from SteamDB, compare it to the latest build data that we have cached, and send an email if SteamDB has a newer version. The comparison is based on build ID, so larger build ID = newer build. It will also send an email if it encountered any errors such as missing cached file, download errors, etc.  
+An application for AWS Lambda that will send an email when updates for the online video-game "Team Fortress 2" are released.
+
+It utilizes data from SteamDB's RSS feed for TF2 updates. The application is set to run repeatedly on a timer. When the timer goes off, it'll retrieve the latest patch data from SteamDB, compare it to the latest build data that we have cached, and send an email if SteamDB has a newer version. The comparison is based on build ID, so larger build ID = newer build. It will also send an email if it encountered any errors such as missing cached file, download errors, etc.
 
 ## Requirements
 1. An AWS account
