@@ -70,7 +70,7 @@ def lambda_handler(event, context):
             print("Uploaded file to S3")
             send_email(
                 sns_client,
-                subject="URGENT - Uploaded new build id file to S3",
+                subject=f"{constants.Misc.EMAIL_SUBJECT_PREFIX} - Uploaded new build id file to S3",
                 message=(
                     f"There wasn't a build id file on S3, so created a new one and uploaded it. It's possible a new"
                     f" version was released. Latest build ID: {latest_patch.build_id}. Latest build date: "
@@ -111,12 +111,10 @@ def lambda_handler(event, context):
         )
 
     print("There is a new build. Sending email")
-    # Include "URGENT" in the email subject, so push notifications will get sent for it. Otherwise, it might not get
-    # flagged as important and a notification won't get sent
     try:
         send_email(
             sns_client,
-            subject="URGENT - Update has been released for TF2",
+            subject=f"{constants.Misc.EMAIL_SUBJECT_PREFIX} - Update has been released for TF2",
             message=f"Cached build ID (old): {cached_build_id}\nSteam DB build ID (new): {latest_patch.build_id}\n")
     except Exception as e:
         return handle_error(sns_client, f"Caught exception when sending email: {e}")

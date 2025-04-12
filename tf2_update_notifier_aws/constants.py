@@ -19,3 +19,6 @@ class Misc:
     PROJECT_NAME = "TF2 Update Notifier"
     # This should be the URL of the RSS feed from SteamDB that has the patch data
     PATCH_NOTES_RSS_URL = os.environ["PATCH_NOTES_RSS_URL"]
+    # Include "URGENT" in the email subject, so push notifications will get sent for it. Otherwise, it might not get
+    # flagged as important and a notification won't get sent.
+    EMAIL_SUBJECT_PREFIX = "[URGENT]"

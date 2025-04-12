@@ -10,7 +10,7 @@ def handle_error(sns_client: BaseClient, error_message: str) -> dict:
     print(error_message)
     send_email(
         sns_client,
-        subject=f"URGENT - {constants.Misc.PROJECT_NAME} had an error",
+        subject=f"{constants.Misc.EMAIL_SUBJECT_PREFIX} - {constants.Misc.PROJECT_NAME} had an error",
         message=error_message
     )
     return generate_return_message(constants.StatusCodes.FAILURE, error_message)
