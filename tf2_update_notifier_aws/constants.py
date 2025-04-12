@@ -1,5 +1,4 @@
-"""
-Holds various constants. Some of them are retrieved from environment variables in AWS Lambda.
+"""Various constants used throughout the program.
 """
 import os
 
@@ -8,8 +7,18 @@ S3_BUCKET_NAME = os.environ["S3_BUCKET_NAME"]
 S3_BUILD_ID_FILE = os.environ["S3_BUILD_ID_FILE"]
 SNS_TOPIC_ARN = os.environ["SNS_TOPIC_ARN"]
 
-# Return codes
-SUCCESS_RETURN_CODE = 200
-FAILURE_RETURN_CODE = 300
+class Boto:
+    SNS = "sns"
+    S3 = "s3"
 
-PATCH_NOTES_RSS_URL = os.environ["PATCH_NOTES_RSS_URL"] # This should be the URL of the RSS feed from SteamDB that has the patch data
+class StatusCodes:
+    SUCCESS = 200
+    FAILURE = 300
+
+class Misc:
+    PROJECT_NAME = "TF2 Update Notifier"
+    # This should be the URL of the RSS feed from SteamDB that has the patch data
+    PATCH_NOTES_RSS_URL = os.environ["PATCH_NOTES_RSS_URL"]
+    # Include "URGENT" in the email subject, so push notifications will get sent for it. Otherwise, it might not get
+    # flagged as important and a notification won't get sent.
+    EMAIL_SUBJECT_PREFIX = "[URGENT]"
