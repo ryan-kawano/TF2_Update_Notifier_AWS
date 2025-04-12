@@ -3,6 +3,22 @@ An application for AWS Lambda that will send an email when updates for the onlin
 
 It utilizes data from SteamDB's RSS feed for TF2 updates. The application is set to run repeatedly on a timer. When the timer goes off, it'll retrieve the latest patch data from SteamDB, compare it to the latest build data that we have cached, and send an email if SteamDB has a newer version. The comparison is based on build ID, so larger build ID = newer build. It will also send an email if it encountered any errors such as missing cached file, download errors, etc.
 
+## Example Notification
+```
+Subject: [URGENT] - Update has been released for TF2
+From: AWS Notifications
+
+Cached build ID (old): 17400490
+Steam DB build ID (new): 17400495
+
+
+--
+If you wish to stop receiving notifications from this topic, please click or visit the link below to unsubscribe:
+<Unsubscribe Link>
+
+Please do not reply directly to this email. If you have any questions or comments regarding this email, please contact us at <Contact Link>
+```
+
 ## Requirements
 1. An AWS account
 2. An email to receive notifications
