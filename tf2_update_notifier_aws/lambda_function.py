@@ -1,9 +1,11 @@
 """Main function that AWS Lambda will run. See the README.md file for more information.
 """
 import os
+
 import boto3
 import botocore.client
 import feedparser
+
 import constants
 from utility import(
     send_email,

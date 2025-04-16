@@ -2,6 +2,7 @@
 """
 from botocore.client import BaseClient
 import feedparser
+
 import constants
 from patch_class import Patch
 
