@@ -20,12 +20,17 @@ Please do not reply directly to this email. If you have any questions or comment
 ```
 
 ## Requirements
-1. An AWS account
-2. An email to receive notifications
+1. An AWS account.
+2. An email to receive notifications.
 
-## Set up on AWS:
-Before doing the steps below, make sure the `region` you are using is set to the correct one.
-### Simple Notification Service
+## Usage
+There are two ways to setup the application - via the included AWS SAM template file or manually. The section below provides instructions for both ways.
+
+### Usage (AWS SAM Template)
+Use the included AWS SAM Template file and deploy to your own AWS account. If you are not familiar with using a template file, I recommend looking at [this tutorial](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-getting-started-hello-world.html) by AWS. You essentially only need to do `Step 2: Build your application` and `Step 3: Deploy your application to the AWS Cloud` with this project. Before deploying, read this README and fill in the places that are marked `FILL IN` in the `template.yaml` file at the root of this repo.
+
+### Usage (manual setup):
+#### Simple Notification Service
 This is the service that will actually send the email.
 1. Go to `Topics`.
 2. Click `Create topic`.
@@ -37,7 +42,7 @@ This is the service that will actually send the email.
 8. For ```Protocol```, choose ```email``` and enter the email you would like notifications to be sent to.
 9. Confirm the subscription by opening the email's inbox and clicking the link in the email that was sent.
 
-### S3
+#### S3
 This is where we will cache the build ID.
 1. Click```General purpose buckets```.
 2. Click ```Create bucket```.
@@ -45,7 +50,7 @@ This is where we will cache the build ID.
 4. Keep the rest of the settings as default.
 5. Click ```Create bucket``` on the bottom-right.
 
-### IAM - Policy
+#### IAM - Policy
 The application needs certain permissions to run correctly.
 1. Click `Policies`.
 2. Click `Create policy`.
@@ -55,7 +60,7 @@ The application needs certain permissions to run correctly.
 6. Name it `TF2_Update_Notifier_Policy`.
 7. Click `Create policy` on the bottom-right.
 
-### IAM - Role
+#### IAM - Role
 This role uses the policy created above.
 1. Click `Roles`.
 2. Click `Create role`.
@@ -67,7 +72,7 @@ This role uses the policy created above.
 8. Name it `TF2_Update_Notifier_Role`.
 9. Click `Create role`.
 
-###  Lambda Part 1 - Creating the function
+####  Lambda Part 1 - Creating the function
 This is the function that has the main application code. It parses the latest build data and determines whether to send an email.
 1. Click `Functions`.
 2. Click `Create function`.
@@ -80,7 +85,7 @@ This is the function that has the main application code. It parses the latest bu
 9. Select the role that we created previously. It should be named `TF2_Update_Notifier_Role`.
 10. Click `Create function`.
 
-### Lambda Part 2 - Adding the layer
+#### Lambda Part 2 - Adding the layer
 The Lambda uses external Python libraries, so a layer containing these libraries needs to be added.
 1. Follow the instructions in this link to create the layer using the `requirements.txt` file in this repo. https://docs.aws.amazon.com/lambda/latest/dg/python-layers.html
 2. After creating the layer `.zip` file, follow the instructions below.
@@ -101,7 +106,7 @@ The Lambda uses external Python libraries, so a layer containing these libraries
 17. Choose the latest version.
 18. Click `Add` on the bottom-right.
 
-### Lambda Part 3 - Adding environment variables
+#### Lambda Part 3 - Adding environment variables
 1. Open our function.
 2. Click on the `Configuration` tab.
 3. Click on `Environment variables`.
@@ -114,7 +119,7 @@ The Lambda uses external Python libraries, so a layer containing these libraries
      * This is the RSS feed for TF2 taken from SteamDB.
 5. Click `Save` on the bottom-right.
 
-### Lambda Part 4 - Adding the source code
+#### Lambda Part 4 - Adding the source code
 1. Open our function.
 2. Open the `Code` tab.
 3. In order to upload our code, you may do one of the below:
@@ -123,7 +128,7 @@ The Lambda uses external Python libraries, so a layer containing these libraries
 4. After adding the code, make sure to click `Deploy` in the IDE.
 5. At this point, you may test the code by clicking `Test` under the `Test` tab.
 
-### EventBridge
+#### EventBridge
 This is the timer that will execute the Lambda.
 1. Click ```Rules```.
 2. Click `Create rule`.
