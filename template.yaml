@@ -1,0 +1,50 @@
+# Template to deploy the application to AWS.
+# Find all the lines labelled "FILL IN" and fill them in with the required values.
+
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Globals:
+  Function:
+    Timeout: 10
+
+Resources:
+  EmailService:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: "TF2 Update Notifier"
+  EmailSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Endpoint: "example@example.com" # FILL IN - Put your email address here
+      Protocol: "email"
+      TopicArn: !GetAtt EmailService.TopicArn
+  BuildIdBucket:
+    Type: AWS::S3::Bucket
+  TF2UpdateNotifierFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.13
+      Policies:
+        - SNSPublishMessagePolicy:
+            TopicName: !GetAtt EmailService.TopicName
+        - S3FullAccessPolicy:
+            BucketName: !Ref BuildIdBucket
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          S3_BUCKET_NAME: !Ref BuildIdBucket # DON'T CHANGE
+          SNS_TOPIC_ARN: !GetAtt EmailService.TopicArn # DON'T CHANGE
+          PATCH_NOTES_RSS_URL: "https://steamdb.info/api/PatchnotesRSS/?appid=440"
+          S3_BUILD_ID_FILE: "latest_build.txt"
+      Events:
+        EventBridgeTimer:
+          Type: ScheduleV2
+          Properties:
+            Description: "The timer that runs the main Lambda function"
+            Name: "tf2_update_notifier_timer"
+            ScheduleExpression: rate(1 hour)
+            State: ENABLED
